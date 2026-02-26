@@ -32,6 +32,8 @@ A high-performance, real-time ecosystem designed for conducting technical assess
 ### The Layout Engine
 The platform utilizes a three-pane layout architecture. The center pane is dedicated to the Code Editor (`flex-2`), while the right pane stacks the Video Feed and Interviewer Notes vertically. This layout ensures the interviewer maintains visual contact with the candidate while recording feedback and monitoring code progression.
 
+
+
 ### Data Synchronization
 All code changes and interviewer notes are handled via Convex mutations. Using a "Patch" strategy rather than full document replacement, the system ensures high-efficiency updates and prevents data loss during concurrent typing sessions.
 
@@ -46,3 +48,36 @@ Authentication is enforced at the edge. Next.js middleware and server-side check
 ```bash
 git clone <your-repo-url>
 cd technical-interview-platform
+2. Install Dependencies
+Bash
+npm install
+3. Environment Configuration
+Create a .env.local file in the root directory and populate it with the following keys from your Convex, Stream, and Auth.js dashboards:
+
+Code snippet
+# Deployment
+NEXT_PUBLIC_CONVEX_URL=
+
+# Authentication
+AUTH_SECRET=
+AUTH_GITHUB_ID=
+AUTH_GITHUB_SECRET=
+
+# Video Infrastructure
+NEXT_PUBLIC_STREAM_API_KEY=
+STREAM_SECRET_KEY=
+4. Start the Backend
+In a separate terminal, run the Convex development server to handle real-time data and schema validation:
+
+Bash
+npx convex dev
+5. Start the Frontend
+Bash
+npm run dev
+Engineering Philosophy
+The primary objective of this project was the high-level orchestration of disparate real-time systems. While the user interface utilizes a modern dark-mode aesthetic, the core value lies in the backend architecture and WebRTC signaling logic. This project prioritizes robust feature implementation—such as operational sync and state machine transitions—over decorative design-heavy CSS or complex animations, ensuring the underlying engine is stable for professional use cases.
+
+Key Terminal Commands
+npx convex dashboard: Open the web-based UI to monitor the interviews and users tables in real-time.
+
+npm run build: Create an optimized production build of the Next.js application.
