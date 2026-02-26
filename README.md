@@ -1,4 +1,4 @@
-##SynIntView
+#SynIntView
 A high-performance, real-time ecosystem designed for conducting technical assessments. This platform integrates low-latency video conferencing, a collaborative code editor, and instant data synchronization to provide a seamless experience for both interviewers and candidates.
 
 Core Features
@@ -40,16 +40,14 @@ Security and Middleware
 Authentication is enforced at the edge. Next.js middleware and server-side checks verify user sessions before granting access to specific meeting rooms or dashboard data, ensuring that interview metadata remains private and secure.
 
 How to Run Locally
-Clone the Repository
-
+1. Clone the Repository
 Bash
 git clone <your-repo-url>
 cd technical-interview-platform
-Install Dependencies
-
+2. Install Dependencies
 Bash
 npm install
-Environment Configuration
+3. Environment Configuration
 Create a .env.local file in the root directory and populate it with the following keys from your Convex, Stream, and Auth.js dashboards:
 
 Code snippet
@@ -64,13 +62,12 @@ AUTH_GITHUB_SECRET=
 # Video Infrastructure
 NEXT_PUBLIC_STREAM_API_KEY=
 STREAM_SECRET_KEY=
-Start the Backend
+4. Start the Backend
 In a separate terminal, run the Convex development server to handle real-time data and schema validation:
 
 Bash
 npx convex dev
-Start the Frontend
-
+5. Start the Frontend
 Bash
 npm run dev
 Engineering Philosophy
