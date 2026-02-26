@@ -1,65 +1,73 @@
-import Image from "next/image";
+import { auth, signIn, signOut } from "@/auth";
+import { SyncUser } from "@/components/SyncUser";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Laptop, Code2, Users2, ShieldCheck } from "lucide-react";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <main className="min-h-screen bg-[#0b0f1a] text-white">
+      {session && <SyncUser />}
+
+      {/* Hero Section */}
+      <div className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent mb-6">
+          Technical Interviews, <br /> Redefined.
+        </h1>
+        <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10">
+          A high-performance ecosystem for real-time coding, high-fidelity video, 
+          and instant feedback syncing.
+        </p>
+
+        {!session ? (
+          <Card className="max-w-md mx-auto bg-slate-900/50 border-slate-800 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-white">Get Started</CardTitle>
+              <CardDescription>Sign in to host or join an interview</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form action={async () => { "use server"; await signIn("github"); }}>
+                <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-500 gap-2">
+                  <Code2 size={20} /> Continue with GitHub
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-blue-400 font-medium">Welcome back, {session.user?.name}</p>
+            <div className="flex gap-4">
+              <Button size="lg" variant="default" className="bg-blue-600 hover:bg-blue-700" asChild>
+                <a href="/dashboard">Enter Dashboard</a>
+              </Button>
+              <form action={async () => { "use server"; await signOut(); }}>
+                <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800">
+                  Sign Out
+                </Button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Feature Grid */}
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-20">
+        <FeatureCard icon={<Laptop className="text-blue-400" />} title="Live Code Sync" desc="Real-time Monaco editor with zero-latency synchronization." />
+        <FeatureCard icon={<Users2 className="text-cyan-400" />} title="WebRTC Video" desc="Low-latency video grid powered by Stream Video SDK." />
+        <FeatureCard icon={<ShieldCheck className="text-emerald-400" />} title="Convex Data" desc="Instant feedback persistence and reliable interview state." />
+      </div>
+    </main>
+  );
+}
+
+function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (
+    <div className="p-6 rounded-2xl bg-slate-900/30 border border-slate-800 hover:border-slate-700 transition-colors">
+      <div className="mb-4">{icon}</div>
+      <h3 className="text-xl font-bold mb-2">{title}</h3>
+      <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
     </div>
   );
 }
